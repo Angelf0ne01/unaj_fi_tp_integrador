@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  #back
+  #  api_client:
+  #    image: node:14
+  #    container_name: plp_api
+  #    volumes:
+  #      - "${VOLUME_FOLDER_BACK}:/usr/src/service"
+  #    working_dir: /usr/src/service
+  #    command: npm run dev:api
+
+  #front
+  #  front_client:
+  #    image: node:14
+  #    container_name: plp_front
+  #    volumes:
+  #      - "${VOLUME_FOLDER_FRONT}:/usr/src/service"
+  #    working_dir: /usr/src/service
+  #    command: npm run dev
+  #db
+  db:
+    image: mysql
+    container_name: unaj_mysql_db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - unaj_mysql_datavolume:/var/lib/mysql
+    ports:
+      - "${DB_PORT}:3306"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  unaj_mysql_datavolume:
