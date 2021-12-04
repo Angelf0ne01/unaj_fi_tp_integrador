@@ -3,7 +3,34 @@ import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
 import { Layout } from "../components";
-import { Card, CardContent, Typography, Avatar, Grid } from "@mui/material";
+import {
+  Select,
+  Card,
+  CardContent,
+  Typography,
+  Avatar,
+  Grid,
+  TextField,
+  MenuItem,
+  Divider,
+  FormControl,
+  Button,
+  InputLabel,
+  Breadcrumbs,
+  Link,
+} from "@mui/material";
+import { ButtonActions } from "../components/ButtonActions";
+
+const Header = () => {
+  return (
+    <Breadcrumbs style={{ padding: "20px 0" }}>
+      <Link href="/">Home</Link>
+      <Typography color="text.primary" variant="body1">
+        Resumen del partido
+      </Typography>
+    </Breadcrumbs>
+  );
+};
 
 interface TeamSummary {
   src: string;
@@ -43,8 +70,8 @@ const RowItem = () => {
           <Grid item container xs={4} justifyContent="center">
             <TeamSummary src={img_url_2} name="Villa Real" />
           </Grid>
-          <Grid  container item xs={12} justifyContent="center">
-              <Typography variant="caption" >{"finalizado"}</Typography>
+          <Grid container item xs={12} justifyContent="center">
+            <Typography variant="caption">{"finalizado"}</Typography>
           </Grid>
         </Grid>
       </CardContent>
@@ -64,7 +91,7 @@ const MatchResultsList = ({ data }: MatchResultListProps) => {
         gridAutoFlow: "row dense",
         gridAutoRows: "minmax(min-content, max-content)",
         gridTemplateColumns: "repeat(auto-fit, minmax(20rem, 1fr))",
-        width: "40%",
+        width: "100%",
       }}
     >
       {data?.map((item, idx) => (
@@ -73,10 +100,133 @@ const MatchResultsList = ({ data }: MatchResultListProps) => {
     </div>
   );
 };
+
+interface SelectProps {
+  label: string;
+  value: string;
+  default?: boolean;
+}
+
+interface SelectFormProps extends FormProps {
+  data?: Array<SelectProps>;
+  label?: string;
+}
+const SelectForm = ({ data, label, isEdit }: SelectFormProps) => {
+  return (
+    <FormControl fullWidth disabled={isEdit}>
+      <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+      <Select fullWidth label={label}>
+        {data?.map((item, idx) => (
+          <MenuItem key={idx} value={item.value}>
+            {item.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
+
+interface FormProps {
+  isEdit?: boolean;
+}
+
+interface TeamSelectedProps extends FormProps {}
+
+const TeamSelected = ({ isEdit }: TeamSelectedProps) => {
+  const label_1 = "Local";
+  const label_2 = "Visitante";
+
+  return (
+    <Grid container item xs={12}>
+      <Grid item xs={5}>
+        <SelectForm label={label_1} isEdit={isEdit} />
+      </Grid>
+      <Grid item xs={2} container alignItems="center" justifyContent="center">
+        <Typography variant="h6">{"vs"}</Typography>
+      </Grid>
+      <Grid item xs={5}>
+        <SelectForm label={label_2} isEdit={isEdit} />
+      </Grid>
+    </Grid>
+  );
+};
+
+const SelectFormStatus = () => {
+  const label = "Estado del partido";
+  const data: SelectProps[] = [
+    {
+      value: "end",
+      label: "Finalizado",
+    },
+    {
+      value: "in_progress",
+      label: "En progreso",
+    },
+  ];
+
+  return (
+    <Grid container item xs={12}>
+      <SelectForm data={data} label={label} />
+    </Grid>
+  );
+};
+
+const TeamQuantity = () => {
+  return (
+    <Grid container item xs={12}>
+      <Grid item xs={5}>
+        <TextField label="" type="number" name="Equipo 1" fullWidth />
+      </Grid>
+      <Grid item xs={2} />
+      <Grid item xs={5}>
+        <TextField label="" type="number" name="Equipo 1" fullWidth />
+      </Grid>
+    </Grid>
+  );
+};
+
+
+const Form = () => {
+  const isEdit = true;
+  const title = isEdit ? "Editar Partido" : "Nuevo Partido";
+
+  return (
+    <Card elevation={5} style={{ padding: 20 }}>
+      <Typography variant="h2" component="div">
+        {title}
+      </Typography>
+      <Divider
+        sx={{
+          marginTop: "1rem",
+          marginBottom: "1rem",
+        }}
+      />
+      <form>
+        <Grid container spacing={3}>
+          <TeamSelected isEdit={isEdit} />
+          <TeamQuantity />
+          <SelectFormStatus />
+          <SelectFormStatus />
+          <ButtonActions isEdit={isEdit} />
+        </Grid>
+      </form>
+    </Card>
+  );
+};
 const Home = () => {
   return (
     <Layout>
-      <MatchResultsList data={[1, 2, 3, 4, 5,12,321,4,125,12,2,,123,2154,21,3]} />
+      <Header />
+      <Grid container spacing={3} justifyContent="center" alignItems="center">
+        <Grid item xs={4}>
+          <Form />
+        </Grid>
+        <Grid container item xs={8} justifyContent="center" alignItems="center">
+          <MatchResultsList
+            data={[1, 2, 3, 4, 5, 12, 321, 4, 125, 12, 2, , 3]}
+          />
+        </Grid>
+      </Grid>
     </Layout>
   );
 };

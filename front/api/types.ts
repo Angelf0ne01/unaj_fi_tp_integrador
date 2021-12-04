@@ -1,3 +1,7 @@
+export interface ResponseType<T> {
+  data: T;
+}
+
 enum MatchState {
   WaitingForStart = 1,
   InProgress = 2,

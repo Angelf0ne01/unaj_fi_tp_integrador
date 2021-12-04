@@ -123,10 +123,7 @@ const theme = {
     },
     MuiSelect: {
       defaultProps: {
-        IconComponent: {
-          type: {},
-          compare: null,
-        },
+        variant: "outlined",
       },
       styleOverrides: {
         iconFilled: {
@@ -573,6 +570,5 @@ const theme = {
     tooltip: 1500,
   },
 };
-
 
 export default theme;

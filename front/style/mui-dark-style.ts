@@ -120,11 +120,7 @@ export const theme = {
     },
     MuiSelect: {
       defaultProps: {
-        IconComponent: {
-          //@ts-ignore
-          type: {},
-          compare: null,
-        },
+        variant: "outlined",
       },
       styleOverrides: {
         iconFilled: {

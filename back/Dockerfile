@@ -2,6 +2,7 @@ FROM python:3.8
 WORKDIR /usr/app
 COPY ./requirements.txt .
 #install dependencies
+RUN pip install mysql-connector-python
 RUN pip install -r requirements.txt
 #set environment variables
 ENV FLASK_ENV=development
