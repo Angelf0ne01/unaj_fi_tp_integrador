@@ -11,6 +11,8 @@ class MysqlRepository:
         self.mycursor = self.mydb.cursor(dictionary=True)
         self.mycursor.execute("SELECT * FROM "+table)
         self.myresult = self.mycursor.fetchall()
+        if(self.myresult == []):
+            return json.dumps({"message": "Empty"})
         return json.dumps(self.myresult)
 
     def getById(self, table, id):

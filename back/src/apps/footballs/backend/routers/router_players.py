@@ -2,8 +2,7 @@ from flask import Blueprint, make_response, jsonify, request
 from ..controller.PlayerController import PlayerController
 from ..dependency_injection.players import PlayerInjection
 
-router = Blueprint('players', __name__,)
-
+router = Blueprint('players', __name__)
 
 @router.route('/', methods=['PUT'])
 def create():

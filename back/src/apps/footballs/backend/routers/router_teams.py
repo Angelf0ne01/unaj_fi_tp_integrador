@@ -2,8 +2,7 @@ from flask import Blueprint, make_response, jsonify, request
 from ..controller.TeamController import TeamController
 from ..dependency_injection.teams import TeamInjection
 
-router = Blueprint('teams', __name__,)
-
+router = Blueprint('teams', __name__)
 
 @router.route('/', methods=['PUT'])
 def create():

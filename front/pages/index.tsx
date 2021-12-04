@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import { ButtonActions } from "../components/ButtonActions";
 import { useMatchResults } from "../utils/hooks/use-matchResults";
+import { getMatchResults } from "../api/matchResults";
 
 const Header = () => {
   return (
@@ -214,8 +215,20 @@ const Form = () => {
   );
 };
 const Home = () => {
-  const { matchResults } = useMatchResults();
-  console.log("matchResults", matchResults);
+  //const { matchResults } = useMatchResults();
+  //console.log("matchResults", matchResults);
+
+  React.useEffect(() => {
+    const fetch = async () => {
+      try {
+        const resp = await getMatchResults();
+        console.log("resp",resp);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    fetch();
+  }, []);
 
   return (
     <Layout>

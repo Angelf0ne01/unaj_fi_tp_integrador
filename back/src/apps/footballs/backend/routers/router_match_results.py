@@ -1,11 +1,9 @@
 from flask import Blueprint, make_response, jsonify, request
-from flask_cors import CORS
 
 from ..controller.MatchResultController import MatchResultController
 from ..dependency_injection.matchResult import MatchResultInjection
 
-router = Blueprint('matchResults', __name__,)
-CORS(router, resources=r'/*')
+router = Blueprint('matchResults', __name__)
 
 
 @router.route('/', methods=['PUT'])
@@ -29,7 +27,7 @@ def getById(id):
 def getAll():
     matchResultController = MatchResultController(
         MatchResultInjection().getInstance())
-    return matchResultController.get_all(request, make_response).headers.add('Access-Control-Allow-Origin', '*')
+    return matchResultController.get_all(request, make_response)
 
 # delete
 
