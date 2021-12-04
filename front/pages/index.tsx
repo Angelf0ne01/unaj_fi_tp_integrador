@@ -20,6 +20,7 @@ import {
   Link,
 } from "@mui/material";
 import { ButtonActions } from "../components/ButtonActions";
+import { useMatchResults } from "../utils/hooks/use-matchResults";
 
 const Header = () => {
   return (
@@ -185,7 +186,6 @@ const TeamQuantity = () => {
   );
 };
 
-
 const Form = () => {
   const isEdit = true;
   const title = isEdit ? "Editar Partido" : "Nuevo Partido";
@@ -214,6 +214,9 @@ const Form = () => {
   );
 };
 const Home = () => {
+  const { matchResults } = useMatchResults();
+  console.log("matchResults", matchResults);
+
   return (
     <Layout>
       <Header />
