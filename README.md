@@ -1,4 +1,4 @@
-#Sistema de gestión de partidos de fútbol 
+# Sistema de gestión de partidos de fútbol 
 
 ## Tecnologias:
 #### Backend:
