@@ -18,7 +18,7 @@ class PlayerController(InterfaceController):
             id, name, position, team_id)
         return resp(resp_creator, 200)
 
-    def get_all(self, req, resp):
+    def get_all(self, req, resp):        
         player_find_all = self.playerApplication.get_all()
         return resp(player_find_all, 200)
 

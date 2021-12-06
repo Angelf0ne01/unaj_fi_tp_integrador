@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Layout } from "../../components/Layout";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
@@ -17,16 +18,17 @@ import Fab from "@mui/material/Fab";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import AddIcon from "@mui/icons-material/Add";
 import ButtonActions from "../../components/ButtonActions";
+import Empty from "../../components/empty";
+import { useTeams } from "../../utils/hooks/use-teams";
+import { createTeam, Team, updateTeam } from "../../api";
+import { useForm, useFormContext, FormProvider } from "react-hook-form";
 
 const FormSection = () => {
+  const { register } = useFormContext();
+
   const data: TextFieldProps[] = [
     {
       label: "name",
-      variant: "outlined",
-      type: "text",
-    },
-    {
-      label: "position",
       variant: "outlined",
       type: "text",
     },
@@ -40,6 +42,8 @@ const FormSection = () => {
           label={item?.label}
           variant={item?.variant}
           type={item?.type}
+          //@ts-ignore
+          {...register(item?.label)}
           fullWidth
           style={{
             marginTop: 20,
@@ -55,7 +59,28 @@ interface FormTeamsProps {
   isEdit?: boolean;
 }
 function FormPlayer({ onCancel, isEdit }: FormTeamsProps) {
+  const { handleSubmit } = useFormContext();
   const title = isEdit ? "Editar Equipo" : "Agregar Equipo";
+
+  const onSubmit = async (data: any) => {
+    const id = uuidv4();
+    const team = {
+      id,
+      ...data,
+    };
+    try {
+      if (isEdit) {
+        const resp = await updateTeam(id, team);
+        console.log(resp);
+      } else {
+        const resp = await createTeam(team);
+        console.log(resp);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div
       style={{
@@ -63,7 +88,7 @@ function FormPlayer({ onCancel, isEdit }: FormTeamsProps) {
         padding: "20px",
       }}
     >
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <Typography variant="h6">{title}</Typography>
         <FormSection />
         <ButtonActions onCancel={onCancel} />
@@ -111,19 +136,19 @@ function RowItemAdd() {
   );
 }
 
-function RowItem({ id }) {
+function RowItem({ id, item }) {
   return (
-    <Link href={`/teams/${id}`}>
+    <Link href={`/teams/${item?.id}`}>
       <Card elevation={5} sx={{ maxWidth: 245 }}>
         <CardMedia
           component="img"
           height="140"
-          image="https://static01.nyt.com/images/2019/04/16/sports/16onsoccerweb-2/merlin_153612873_5bb119b9-8972-4087-b4fd-371cab8c5ba2-superJumbo.jpg"
+          image="https://marcas-logos.net/wp-content/uploads/2020/02/Real-Madrid-logo.png"
           title="Contemplative Reptile"
         />
         <CardContent>
           <Typography variant="h3" align="center">
-            Lizard
+            {item?.name}
           </Typography>
         </CardContent>
       </Card>
@@ -135,6 +160,16 @@ interface TeamsListProps {
   data?: Array<any>;
 }
 const TeamsList = ({ data }: TeamsListProps) => {
+  const isEmpty = data?.length === 0;
+
+  if (isEmpty || !data) {
+    return (
+      <>
+        <RowItemAdd />
+        <Empty />
+      </>
+    );
+  }
   return (
     <div
       style={{
@@ -148,7 +183,7 @@ const TeamsList = ({ data }: TeamsListProps) => {
     >
       <RowItemAdd />
       {data?.map((item, idx) => (
-        <RowItem key={idx} id={idx} />
+        <RowItem key={idx} id={idx} item={item} />
       ))}
     </div>
   );
@@ -166,15 +201,22 @@ const Header = () => {
 };
 
 function Teams() {
+  const { teamsResults } = useTeams();
+  const methods = useForm({
+    mode: "onChange",
+  });
+
   return (
     <Layout>
-      <Header />
-      <Grid container justifyContent="flex-end">
-        <Grid item xs={4}>
-          <SearchAppBar />
+      <FormProvider {...methods}>
+        <Header />
+        <Grid container justifyContent="flex-end">
+          <Grid item xs={4}>
+            <SearchAppBar />
+          </Grid>
         </Grid>
-      </Grid>
-      <TeamsList data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
+        <TeamsList data={teamsResults} />
+      </FormProvider>
     </Layout>
   );
 }

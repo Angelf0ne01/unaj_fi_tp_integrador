@@ -25,6 +25,7 @@ export const ButtonActions = ({
         color="primary"
         fullWidth
         style={{ marginBottom: 20, marginTop: 20 }}
+        type="submit"
         size="large"
       >
         {isEdit ? "Guardar" : "Crear"}

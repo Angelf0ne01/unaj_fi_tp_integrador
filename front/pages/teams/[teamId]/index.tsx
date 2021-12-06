@@ -17,6 +17,10 @@ import Fab from "@mui/material/Fab";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import AddIcon from "@mui/icons-material/Add";
 import ButtonActions from "../../../components/ButtonActions";
+import Empty from "../../../components/empty";
+import router from "next/router";
+import { usePlayer } from "../../../utils/hooks/use-players";
+import { Player } from "../../../api";
 
 const FormSection = () => {
   const data: TextFieldProps[] = [
@@ -110,7 +114,7 @@ function RowItemAdd() {
   );
 }
 
-function RowItem() {
+function RowItem(item: Player) {
   return (
     <Card elevation={5} sx={{ maxWidth: 245 }}>
       <CardMedia
@@ -129,10 +133,10 @@ function RowItem() {
 
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Lizard
+          {item.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
+          {`position: ${item?.position}`}
         </Typography>
       </CardContent>
     </Card>
@@ -143,6 +147,16 @@ interface PlayertListProps {
   data?: Array<any>;
 }
 const PlayerList = ({ data }: PlayertListProps) => {
+  const isEmpty = data?.length === 0;
+
+  if (isEmpty || !data) {
+    return (
+      <>
+        <RowItemAdd />
+        <Empty />
+      </>
+    );
+  }
   return (
     <div
       style={{
@@ -156,7 +170,7 @@ const PlayerList = ({ data }: PlayertListProps) => {
     >
       <RowItemAdd />
       {data?.map((item, idx) => (
-        <RowItem key={idx} />
+        <RowItem key={idx} item={item as Player} />
       ))}
     </div>
   );
@@ -175,6 +189,9 @@ const Header = () => {
 };
 
 function Player() {
+  const { teamId } = router.query;
+  const { players } = usePlayer(teamId);
+  console.log("teamid", teamId);
   return (
     <Layout>
       <Header />
@@ -183,7 +200,7 @@ function Player() {
           <SearchAppBar />
         </Grid>
       </Grid>
-      <PlayerList data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
+      <PlayerList data={players} />
     </Layout>
   );
 }

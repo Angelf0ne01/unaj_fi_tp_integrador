@@ -10,9 +10,7 @@ class MysqlRepository:
     def getAll(self, table):
         self.mycursor = self.mydb.cursor(dictionary=True)
         self.mycursor.execute("SELECT * FROM "+table)
-        self.myresult = self.mycursor.fetchall()
-        if(self.myresult == []):
-            return json.dumps({"message": "Empty"})
+        self.myresult = self.mycursor.fetchall()        
         return json.dumps(self.myresult)
 
     def getById(self, table, id):

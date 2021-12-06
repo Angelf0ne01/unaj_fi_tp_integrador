@@ -22,6 +22,7 @@ import {
 import { ButtonActions } from "../components/ButtonActions";
 import { useMatchResults } from "../utils/hooks/use-matchResults";
 import { getMatchResults } from "../api/matchResults";
+import Empty from "../components/empty";
 
 const Header = () => {
   return (
@@ -85,6 +86,12 @@ interface MatchResultListProps {
   data?: Array<any>;
 }
 const MatchResultsList = ({ data }: MatchResultListProps) => {
+  const isEmpty = data?.length === 0;
+
+  if (isEmpty || !data) {
+    return <Empty />;
+  }
+
   return (
     <div
       style={{
@@ -215,20 +222,7 @@ const Form = () => {
   );
 };
 const Home = () => {
-  //const { matchResults } = useMatchResults();
-  //console.log("matchResults", matchResults);
-
-  React.useEffect(() => {
-    const fetch = async () => {
-      try {
-        const resp = await getMatchResults();
-        console.log("resp",resp);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    fetch();
-  }, []);
+  const { matchResults } = useMatchResults();
 
   return (
     <Layout>
@@ -238,9 +232,7 @@ const Home = () => {
           <Form />
         </Grid>
         <Grid container item xs={8} justifyContent="center" alignItems="center">
-          <MatchResultsList
-            data={[1, 2, 3, 4, 5, 12, 321, 4, 125, 12, 2, , 3]}
-          />
+          <MatchResultsList data={matchResults} />
         </Grid>
       </Grid>
     </Layout>
